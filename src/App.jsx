@@ -1,8 +1,9 @@
-import { useState, useRef } from 'react'
-import { styled } from 'styled-components'
+import { useState } from 'react'
+import styled from 'styled-components'
+
+
 
 export default function App() {
-  const leftList = useRef()
   const [numbers, setNumbers] = useState({
     1: {
       location: 'left',
@@ -40,30 +41,29 @@ export default function App() {
     setNumbers(newNumbers)
   }
 
+  const checkbox = (number) => (
+    <label key={number}>
+      <input onChange={() => handleOnChange(number)} checked={numbers[number].check} type='checkbox' />{number}
+    </label>
+  )
+  let leftList = []
+  let rightList = []
+  Object.keys(numbers).forEach(number => {
+    if(numbers[number].location === 'left') {
+      leftList.push(checkbox(number))
+    } else if(numbers[number].location === 'right') {
+      rightList.push(checkbox(number))
+    }
+  })
+
   return (
     <Container>
-      <ListContainer ref={leftList}>
-        { Object.keys(numbers).map(number => {
-          if(numbers[number].location === 'left') {
-            return <label key={number}>
-              <input onChange={() => handleOnChange(number)} checked={numbers[number].check} type='checkbox' />{number}
-            </label>
-          }
-        }) }
-      </ListContainer>
+      <ListContainer> {leftList} </ListContainer>
       <ButtonContanier>
         <Button onClick={ () => handleOnClick('left') } type="button">&gt;</Button>
         <Button onClick={ () => handleOnClick('right') } type="button">&lt;</Button>
       </ButtonContanier>
-      <ListContainer>
-      { Object.keys(numbers).map(number => {
-          if(numbers[number].location === 'right') {
-            return <label key={number}>
-              <input onChange={() => handleOnChange(number)} checked={numbers[number].check} type='checkbox' />{number}
-            </label>
-          }
-        }) }
-      </ListContainer>
+      <ListContainer> {rightList} </ListContainer>
     </Container>
   )
 }
